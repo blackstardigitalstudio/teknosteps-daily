@@ -56,10 +56,13 @@ jobs:
           T2: ${{ secrets.TOKEN_CH2_B64 }}
           T3: ${{ secrets.TOKEN_CH3_B64 }}
         run: |
-          echo "$CS" | base64 -d > client_secret.json
-          echo "$T1" | base64 -d > token.json
-          echo "$T2" | base64 -d > token_ch2.json
-          echo "$T3" | base64 -d > token_ch3.json
+          printf '%s' "$CS" | tr -d '[:space:]' | base64 -d > client_secret.json
+          printf '%s' "$T1" | tr -d '[:space:]' | base64 -d > token.json
+          printf '%s' "$T2" | tr -d '[:space:]' | base64 -d > token_ch2.json
+          printf '%s' "$T3" | tr -d '[:space:]' | base64 -d > token_ch3.json
+          for f in client_secret.json token.json token_ch2.json token_ch3.json; do
+            python -c "import json,sys; json.load(open('$f')); print('ok $f')" || { echo "[X] $f non valido"; exit 1; }
+          done
 
       - name: Pubblicazione giornaliera
         env:
