@@ -116,23 +116,46 @@ def main():
         vf = (f"scale={w}:{h}:force_original_aspect_ratio=decrease,"
               f"pad={w}:{h}:(ow-iw)/2:(oh-ih)/2,setsar=1,fps={args.fps}")
 
-        cmd = [
+        # VELOCE (2 passi): codifico UNA passata del loop pavimenti (scale/pad/fps)
+        # e poi lo estendo in COPY fino alla durata piena, invece di ri-codificare
+        # 60 minuti interi. Il video e' comunque un loop, quindi il risultato visivo
+        # e' identico, ma il render e' ~15x piu' veloce e usa molta meno CPU
+        # (fondamentale per farlo girare nel cloud/GitHub Actions).
+        vloop = args.out + ".vloop.mp4"
+        cmd1 = [
             ffmpeg, "-y",
-            "-stream_loop", "-1", "-f", "concat", "-safe", "0", "-i", tmp.name,  # video in loop
-            "-stream_loop", "-1", "-i", args.audio,                               # audio in loop
-            "-t", str(durata_sec),
-            "-map", "0:v:0", "-map", "1:a:0",
+            "-f", "concat", "-safe", "0", "-i", tmp.name,
             "-vf", vf,
             "-threads", str(args.threads),
             "-c:v", "libx264", "-preset", args.preset, "-crf", str(args.crf),
             "-pix_fmt", "yuv420p",
+            "-g", "48", "-keyint_min", "48", "-sc_threshold", "0",
+            "-an", "-movflags", "+faststart",
+            vloop,
+        ]
+        print(f"[i] Creo video: {args.durata:.0f} min @ {args.res} {args.fps}fps -> {args.out}")
+        print("[i] 1/2 codifico il loop visivo (una passata)...")
+        if subprocess.run(cmd1).returncode != 0:
+            print("[X] ffmpeg (loop visivo) ha restituito un errore.")
+            sys.exit(1)
+        cmd2 = [
+            ffmpeg, "-y", "-fflags", "+genpts",
+            "-stream_loop", "-1", "-i", vloop,       # video in loop (COPY, veloce)
+            "-stream_loop", "-1", "-i", args.audio,  # audio in loop
+            "-t", str(durata_sec),
+            "-map", "0:v:0", "-map", "1:a:0",
+            "-c:v", "copy",
             "-c:a", "aac", "-b:a", "160k", "-ac", "2", "-ar", "44100",
+            "-avoid_negative_ts", "make_zero",
             "-movflags", "+faststart",
             args.out,
         ]
-        print(f"[i] Creo video: {args.durata:.0f} min @ {args.res} {args.fps}fps -> {args.out}")
-        print("[i] (può richiedere qualche minuto)")
-        r = subprocess.run(cmd)
+        print("[i] 2/2 estendo a durata piena (copy)...")
+        r = subprocess.run(cmd2)
+        try:
+            os.unlink(vloop)
+        except OSError:
+            pass
         if r.returncode != 0:
             print("[X] ffmpeg ha restituito un errore.")
             sys.exit(r.returncode)
