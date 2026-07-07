@@ -39,7 +39,20 @@ CLIENT_SECRET = os.path.join(BASE, "client_secret.json")
 TOKEN = os.path.join(BASE, "token.json")
 
 
-def get_service(token_path=None):
+def _client_secret_for(token_path):
+    """Client_secret del progetto giusto per questo canale.
+    Ogni canale puo' avere il SUO progetto Google (quota separata): dal nome del
+    token deriva il client_secret. Es. token_ch2.json -> client_secret_ch2.json;
+    se non esiste, usa il client_secret.json di default (progetto condiviso)."""
+    base = os.path.basename(token_path or TOKEN)
+    if base.startswith("token_"):
+        cand = os.path.join(BASE, "client_secret_" + base[len("token_"):])
+        if os.path.exists(cand):
+            return cand
+    return CLIENT_SECRET
+
+
+def get_service(token_path=None, client_secret_path=None):
     try:
         from google.oauth2.credentials import Credentials
         from google_auth_oauthlib.flow import InstalledAppFlow
@@ -51,6 +64,7 @@ def get_service(token_path=None):
         sys.exit(1)
 
     token_path = token_path or TOKEN
+    client_secret_path = client_secret_path or _client_secret_for(token_path)
     creds = None
     if os.path.exists(token_path):
         creds = Credentials.from_authorized_user_file(token_path, SCOPES)
@@ -58,10 +72,10 @@ def get_service(token_path=None):
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
-            if not os.path.exists(CLIENT_SECRET):
-                print(f"[X] Manca {CLIENT_SECRET}. Vedi SETUP_YOUTUBE_API.md")
+            if not os.path.exists(client_secret_path):
+                print(f"[X] Manca {client_secret_path}. Vedi SETUP_YOUTUBE_API.md")
                 sys.exit(1)
-            flow = InstalledAppFlow.from_client_secrets_file(CLIENT_SECRET, SCOPES)
+            flow = InstalledAppFlow.from_client_secrets_file(client_secret_path, SCOPES)
             # prompt select_account: permette di scegliere il canale/brand giusto (es. Strange Light)
             creds = flow.run_local_server(port=0, prompt="select_account")
         with open(token_path, "w", encoding="utf-8") as f:
@@ -82,10 +96,11 @@ def main():
     ap.add_argument("--short", action="store_true", help="aggiunge #Shorts e usa titolo breve")
     ap.add_argument("--category", default="10", help="10 = Música")
     ap.add_argument("--token", default=None, help="file token (es. token_ch2.json per il 2 canale)")
+    ap.add_argument("--client-secret", default=None, help="client_secret del progetto (default: auto dal nome token, poi client_secret.json)")
     args = ap.parse_args()
 
     if args.auth_only:
-        get_service(args.token)
+        get_service(args.token, args.client_secret)
         print(f"[OK] Consenso fatto, token salvato: {args.token or 'token.json'}")
         return
 
@@ -107,7 +122,7 @@ def main():
 
     tags = [t.strip() for t in args.tags.split(",") if t.strip()]
 
-    yt = get_service(args.token)
+    yt = get_service(args.token, args.client_secret)
     body = {
         "snippet": {
             "title": title[:100],

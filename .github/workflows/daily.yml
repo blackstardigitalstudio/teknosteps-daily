@@ -54,6 +54,8 @@ jobs:
       - name: Ripristino credenziali (secret cifrati)
         env:
           CS: ${{ secrets.CLIENT_SECRET_B64 }}
+          CS2: ${{ secrets.CLIENT_SECRET_CH2_B64 }}
+          CS3: ${{ secrets.CLIENT_SECRET_CH3_B64 }}
           T1: ${{ secrets.TOKEN_CH1_B64 }}
           T2: ${{ secrets.TOKEN_CH2_B64 }}
           T3: ${{ secrets.TOKEN_CH3_B64 }}
@@ -62,6 +64,9 @@ jobs:
           printf '%s' "$T1" | tr -d '[:space:]' | base64 -d > token.json
           printf '%s' "$T2" | tr -d '[:space:]' | base64 -d > token_ch2.json
           printf '%s' "$T3" | tr -d '[:space:]' | base64 -d > token_ch3.json
+          # client_secret separati per canale (progetti Google dedicati): solo se il secret esiste
+          if [ -n "$CS2" ]; then printf '%s' "$CS2" | tr -d '[:space:]' | base64 -d > client_secret_ch2.json; fi
+          if [ -n "$CS3" ]; then printf '%s' "$CS3" | tr -d '[:space:]' | base64 -d > client_secret_ch3.json; fi
           for f in client_secret.json token.json token_ch2.json token_ch3.json; do
             python -c "import json,sys; json.load(open('$f')); print('ok $f')" || { echo "[X] $f non valido"; exit 1; }
           done
