@@ -17,6 +17,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--no-upload", action="store_true")
     ap.add_argument("--privacy", default="public")
+    ap.add_argument("--shorts", type=int, default=5)
     ap.add_argument("--reuse-visual", action="store_true",
                     help="riusa base_ipno.mp4 gia' pronto (rigenera solo audio+montaggio)")
     args = ap.parse_args()
@@ -27,7 +28,7 @@ def main():
         vcmd.append("--no-visual-gen")
     run(vcmd, "1/4 Video ipnotico")   # <- qui viene generato l'audio + _audio_meta.json
     run(["genera_copertina_ipno.py", "--video", video], "2/4 Copertina ipnotica")
-    run(["crea_short.py", "--preset", "hypno", "--input", video, "--auto", "5"], "3/4 Short verticali (x5)")
+    run(["crea_short.py", "--preset", "hypno", "--input", video, "--auto", str(args.shorts)], f"3/4 Short verticali (x{args.shorts})")
     # SEO: titolo con BPM + descrizione con capitoli reali (legge _audio_meta.json)
     title, desc, tags = seo_youtube.build("strange")
     open(df, "w", encoding="utf-8").write(desc)
@@ -47,7 +48,7 @@ def main():
         "Dark Psytrance that hits different in the dark",
     ]
     hooks = random.sample(STRANGE_HOOKS, len(STRANGE_HOOKS))   # ordine casuale, senza ripetere
-    for i in range(1, 6):
+    for i in range(1, args.shorts + 1):
         sp = os.path.join(BASE, f"short_hypno_{i:02d}.mp4")
         if not os.path.exists(sp):
             continue

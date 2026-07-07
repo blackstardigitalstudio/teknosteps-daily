@@ -17,6 +17,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--no-upload", action="store_true")
     ap.add_argument("--privacy", default="public")
+    ap.add_argument("--shorts", type=int, default=5)
     args = ap.parse_args()
     video = os.path.join(BASE, "teknosteps_scimmia_kling_1h.mp4")
     short = os.path.join(BASE, "short_monkey_kling.mp4")
@@ -30,7 +31,7 @@ def main():
          "--durata", "60", "--long-out", video, "--short-out", short, "--only", "both"],
         "1/3 Video scimmia 3D (Kling)")   # <- genera audio + _audio_meta.json
     # 5 Short verticali a tempi distribuiti del video 1h (hook "THIS MONKEY / IS ON BEAT")
-    run(["crea_short.py", "--preset", "monkey", "--input", video, "--auto", "5"], "1b/3 Short verticali scimmia (x5)")
+    run(["crea_short.py", "--preset", "monkey", "--input", video, "--auto", str(args.shorts)], f"1b/3 Short verticali scimmia (x{args.shorts})")
     run(["genera_brand_scimmia.py", "--thumb-only"], "2/3 Copertina scimmietta")
     # A/B test copertine: ruota control/A/B per giorno; risultati in SEO_LOG.md
     variant = ["control", "A", "B"][datetime.date.today().toordinal() % 3]
@@ -61,8 +62,8 @@ def main():
         "Dark psytrance but a monkey is losing it",
         "This monkey feels the dark psytrance bass",
     ]
-    hooks = random.sample(MONKEY_HOOKS, 5)
-    for i in range(1, 6):
+    hooks = random.sample(MONKEY_HOOKS, min(args.shorts, len(MONKEY_HOOKS)))
+    for i in range(1, args.shorts + 1):
         sp = os.path.join(BASE, f"short_monkey_{i:02d}.mp4")
         if not os.path.exists(sp):
             continue
