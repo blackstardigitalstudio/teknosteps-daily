@@ -43,11 +43,13 @@ jobs:
         run: pip install -r requirements-cloud.txt
 
       - name: Scarico gli asset (font, video pavimento, clip Kling, visual)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          curl -fsSL --retry 6 -o assets.tar.gz https://teknosteps.com/assets/live/pipeline_assets.tar.gz
-          tar xzf assets.tar.gz
-          rm -f assets.tar.gz
-          echo "Asset estratti:"; ls -1 | head -50
+          gh release download assets-v1 --repo "$GITHUB_REPOSITORY" -p pipeline_assets.tar.gz
+          tar xzf pipeline_assets.tar.gz
+          rm -f pipeline_assets.tar.gz
+          echo "Asset estratti:"; ls -1 | head -30
 
       - name: Ripristino credenziali (secret cifrati)
         env:
