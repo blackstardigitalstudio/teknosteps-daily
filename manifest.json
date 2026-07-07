@@ -1,0 +1,643 @@
+{
+  "_comment": "TeknoSteps — BPM Walk Engine manifest. Made in Italy.",
+  "_cadence_note": "PAVIMENTI AI a frame intero (genera_pavimenti.py): piedi reali, niente divisione, niente seconda persona. 576 -> upscale/sharpen 1080. ~16 pavimenti diversi, camminata infinita con anti-ripetizione e minDisplayMs.",
+  "videos": [
+    {
+      "scenario": "floor_wood",
+      "name": "Legno",
+      "file": "video_output/walk_floor_wood.mp4",
+      "loopDuration": 2.0,
+      "fps": 24,
+      "stepsPerLoop": 2.67,
+      "beatPhaseOffset": 0.0,
+      "tags": [
+        "pavimento",
+        "wood"
+      ]
+    },
+    {
+      "scenario": "floor_cobblestone",
+      "name": "Ciottoli",
+      "file": "video_output/walk_floor_cobblestone.mp4",
+      "loopDuration": 2.0,
+      "fps": 24,
+      "stepsPerLoop": 2.67,
+      "beatPhaseOffset": 0.0,
+      "tags": [
+        "pavimento",
+        "cobblestone"
+      ]
+    },
+    {
+      "scenario": "floor_marble",
+      "name": "Marmo",
+      "file": "video_output/walk_floor_marble.mp4",
+      "loopDuration": 2.0,
+      "fps": 24,
+      "stepsPerLoop": 2.67,
+      "beatPhaseOffset": 0.0,
+      "tags": [
+        "pavimento",
+        "marble"
+      ]
+    },
+    {
+      "scenario": "floor_neongrid",
+      "name": "Griglia Neon",
+      "file": "video_output/walk_floor_neongrid.mp4",
+      "loopDuration": 2.0,
+      "fps": 24,
+      "stepsPerLoop": 2.67,
+      "beatPhaseOffset": 0.0,
+      "tags": [
+        "pavimento",
+        "neongrid"
+      ]
+    },
+    {
+      "scenario": "floor_sand",
+      "name": "Sabbia",
+      "file": "video_output/walk_floor_sand.mp4",
+      "loopDuration": 1.5,
+      "fps": 24,
+      "stepsPerLoop": 2,
+      "beatPhaseOffset": 0.0,
+      "tags": [
+        "pavimento",
+        "sand"
+      ]
+    },
+    {
+      "scenario": "floor_grass",
+      "name": "Erba",
+      "file": "video_output/walk_floor_grass.mp4",
+      "loopDuration": 1.5,
+      "fps": 24,
+      "stepsPerLoop": 2,
+      "beatPhaseOffset": 0.0,
+      "tags": [
+        "pavimento",
+        "grass"
+      ]
+    },
+    {
+      "scenario": "floor_metal",
+      "name": "Metallo",
+      "file": "video_output/walk_floor_metal.mp4",
+      "loopDuration": 1.5,
+      "fps": 24,
+      "stepsPerLoop": 2,
+      "beatPhaseOffset": 0.0,
+      "tags": [
+        "pavimento",
+        "metal"
+      ]
+    },
+    {
+      "scenario": "floor_tiles",
+      "name": "Piastrelle",
+      "file": "video_output/walk_floor_tiles.mp4",
+      "loopDuration": 1.5,
+      "fps": 24,
+      "stepsPerLoop": 2,
+      "beatPhaseOffset": 0.0,
+      "tags": [
+        "pavimento",
+        "tiles"
+      ]
+    },
+    {
+      "scenario": "floor_lava",
+      "name": "Lava",
+      "file": "video_output/walk_floor_lava.mp4",
+      "loopDuration": 1.5,
+      "fps": 24,
+      "stepsPerLoop": 2,
+      "beatPhaseOffset": 0.0,
+      "tags": [
+        "pavimento",
+        "lava"
+      ]
+    },
+    {
+      "scenario": "floor_ice",
+      "name": "Ghiaccio",
+      "file": "video_output/walk_floor_ice.mp4",
+      "loopDuration": 1.5,
+      "fps": 24,
+      "stepsPerLoop": 2,
+      "beatPhaseOffset": 0.0,
+      "tags": [
+        "pavimento",
+        "ice"
+      ]
+    },
+    {
+      "scenario": "floor_leaves",
+      "name": "Foglie",
+      "file": "video_output/walk_floor_leaves.mp4",
+      "loopDuration": 1.5,
+      "fps": 24,
+      "stepsPerLoop": 2,
+      "beatPhaseOffset": 0.0,
+      "tags": [
+        "pavimento",
+        "leaves"
+      ]
+    },
+    {
+      "scenario": "floor_concrete",
+      "name": "Cemento",
+      "file": "video_output/walk_floor_concrete.mp4",
+      "loopDuration": 1.5,
+      "fps": 24,
+      "stepsPerLoop": 2,
+      "beatPhaseOffset": 0.0,
+      "tags": [
+        "pavimento",
+        "concrete"
+      ]
+    },
+    {
+      "scenario": "floor_carpet",
+      "name": "Tappeto",
+      "file": "video_output/walk_floor_carpet.mp4",
+      "loopDuration": 1.5,
+      "fps": 24,
+      "stepsPerLoop": 2,
+      "beatPhaseOffset": 0.0,
+      "tags": [
+        "pavimento",
+        "carpet"
+      ]
+    },
+    {
+      "scenario": "floor_circuit",
+      "name": "Circuito",
+      "file": "video_output/walk_floor_circuit.mp4",
+      "loopDuration": 1.5,
+      "fps": 24,
+      "stepsPerLoop": 2,
+      "beatPhaseOffset": 0.0,
+      "tags": [
+        "pavimento",
+        "circuit"
+      ]
+    },
+    {
+      "scenario": "floor_brick",
+      "name": "Mattoni",
+      "file": "video_output/walk_floor_brick.mp4",
+      "loopDuration": 1.5,
+      "fps": 24,
+      "stepsPerLoop": 2,
+      "beatPhaseOffset": 0.0,
+      "tags": [
+        "pavimento",
+        "brick"
+      ]
+    },
+    {
+      "scenario": "floor_asphalt",
+      "name": "Asfalto",
+      "file": "video_output/walk_floor_asphalt.mp4",
+      "loopDuration": 1.5,
+      "fps": 24,
+      "stepsPerLoop": 2,
+      "beatPhaseOffset": 0.0,
+      "tags": [
+        "pavimento",
+        "asphalt"
+      ]
+    }
+  ],
+  "tracks": [],
+  "audioGenerator": {
+    "enabled": true,
+    "style": "frenchtek-tribe",
+    "radio": {
+      "enabled": true,
+      "bpm": 156,
+      "bpmByHour": [
+        165,
+        150,
+        144,
+        132,
+        126,
+        125,
+        127,
+        126,
+        127,
+        129,
+        128,
+        127,
+        128,
+        126,
+        131,
+        129,
+        133,
+        142,
+        144,
+        145,
+        150,
+        152,
+        164,
+        168
+      ],
+      "epochMs": 1735689600000,
+      "blockCycles": 4,
+      "_note": "RADIO SINCRONIZZATA: tutti sentono lo STESSO stream in sync (deterministico dal tempo). bpmByHour[ora Italia 0-23] = BPM che CRESCE verso la notte e cala di giorno (di giorno ~128-134, sera ~140, notte ~150). Il tempo e' costante DENTRO l'ora, integrato in modo deterministico -> sync perfetto. Se bpmByHour manca, si usa bpm costante. Il mood cambia per fascia (blockCycles cicli). epochMs = istante zero.",
+      "_schedule_note": "ora Italia 0-23 -> mood (carattere). bpmByHour ora ALLINEATO al genere di ogni ora (psy 142-150, hardtek/tekno 150-168, techno 131-133, tech house/minimal 125-129). Arco: notte dura, mattina calma, sera che sale.",
+      "schedule": [
+        "DEVOO",
+        "SAJANKA",
+        "PSYTRANCE",
+        "TECHNO",
+        "MINIMAL",
+        "MINIMAL",
+        "TECH HOUSE",
+        "STRANGE LIGHT",
+        "TECH HOUSE",
+        "MINIMAL TECHNO M",
+        "TECH HOUSE",
+        "STRANGE LIGHT",
+        "TECH HOUSE",
+        "MINIMAL",
+        "TECHNO",
+        "TECH HOUSE",
+        "TECHNO",
+        "PSYTRANCE",
+        "PSYTRANCE",
+        "PSYTRANCE",
+        "TEKNO MONKEY",
+        "TEKNO MONKEY",
+        "WAKO TEKNO 2011",
+        "DEVOO"
+      ],
+      "varietyChance": 0.35
+    },
+    "jingles": {
+      "enabled": true,
+      "langs": [
+        "en",
+        "it",
+        "fr",
+        "es"
+      ],
+      "files": [
+        "assets/audio/jingle1.mp3",
+        "assets/audio/jingle2.mp3",
+        "assets/audio/jingle3.mp3"
+      ],
+      "everyBlocks": 2,
+      "duckTo": 0.5,
+      "_note": "Voce/jingle radio (TTS Windows, no copyright): parte al confine di fascia ogni everyBlocks (~10 min), scelta deterministica = sync per tutti. Abbassa la musica (duckTo*0.82) mentre parla la voce."
+    },
+    "startMood": 0,
+    "rotation": {
+      "everyCycles": 4,
+      "random": true,
+      "_note": "Cambia mood ogni ~4 cicli di arrangiamento (~3 min), con jitter casuale se random=true. Il cambio avviene al confine di ciclo: tempo e timbro cambiano senza stacco. Baseline piu' varia (era 6)."
+    },
+    "moods": [
+      {
+        "name": "TECHNO",
+        "genre": "techno",
+        "bpm": 132,
+        "rootSemis": 0,
+        "bassDriveAmt": 3.2,
+        "bassLevel": 1.2,
+        "subLevel": 0.72,
+        "kickDecay": 0.34,
+        "bright": 0.9,
+        "acidLevel": 0.2,
+        "leadDensity": [
+          0.05,
+          0.15
+        ],
+        "choir": 0.0,
+        "_ref": "driving warehouse techno",
+        "bassStyle": "offbeat",
+        "scale": "minor",
+        "kickStyle": "punch",
+        "leadStyle": "technostab",
+        "swing": 0.1
+      },
+      {
+        "name": "STRANGE LIGHT",
+        "genre": "hypnotic",
+        "bpm": 128,
+        "rootSemis": -2,
+        "bassDriveAmt": 2.5,
+        "bassLevel": 1.22,
+        "subLevel": 0.8,
+        "kickDecay": 0.4,
+        "bright": 0.82,
+        "acidLevel": 0.1,
+        "leadDensity": [
+          0.04,
+          0.12
+        ],
+        "choir": 0.35,
+        "_ref": "strange light (CH2) - deep hypnotic techno melodico, pad eterei + build vocali, tag TeknoSteps",
+        "bassStyle": "offbeat",
+        "scale": "dorian",
+        "kickStyle": "punch",
+        "leadStyle": "pluck",
+        "_userMade": true,
+        "_protect": "GENERE INVENTATO DALL'UTENTE - non applicare regole di genere automatiche ne' swing. Solo l'utente lo modifica."
+      },
+      {
+        "name": "TECH HOUSE",
+        "genre": "techhouse",
+        "bpm": 128,
+        "rootSemis": 0,
+        "bassDriveAmt": 2.4,
+        "bassLevel": 1.18,
+        "subLevel": 0.74,
+        "kickDecay": 0.3,
+        "bright": 0.95,
+        "acidLevel": 0.08,
+        "leadDensity": [
+          0.05,
+          0.14
+        ],
+        "choir": 0.0,
+        "_ref": "tech house groovy - rolling bass, hat swing, warm, BPM basso",
+        "bassStyle": "offbeat",
+        "scale": "minor",
+        "kickStyle": "punch",
+        "leadStyle": "organ",
+        "swing": 0.3
+      },
+      {
+        "name": "TEKNO MONKEY",
+        "genre": "tekno",
+        "bpm": 150,
+        "rootSemis": 0,
+        "bassDriveAmt": 3.0,
+        "bassLevel": 1.15,
+        "subLevel": 0.65,
+        "kickDecay": 0.42,
+        "bright": 1.0,
+        "acidLevel": 0.4,
+        "leadDensity": [
+          0.08,
+          0.2
+        ],
+        "choir": 0.0,
+        "jungle": true,
+        "_ref": "tekno monkey - hard tekno + vocali scimmia/giungla, tag TeknoSteps",
+        "bassStyle": "offbeat",
+        "scale": "minor",
+        "kickStyle": "punch",
+        "leadStyle": "acid",
+        "_userMade": true,
+        "_protect": "GENERE INVENTATO DALL'UTENTE - non applicare regole di genere automatiche ne' swing. Solo l'utente lo modifica."
+      },
+      {
+        "name": "MINIMAL",
+        "genre": "minimal",
+        "bpm": 128,
+        "rootSemis": 3,
+        "bassDriveAmt": 2.6,
+        "bassLevel": 1.05,
+        "subLevel": 0.82,
+        "kickDecay": 0.3,
+        "bright": 0.72,
+        "acidLevel": 0.05,
+        "leadDensity": [
+          0.0,
+          0.06
+        ],
+        "choir": 0.0,
+        "_ref": "deep hypnotic minimal",
+        "bassStyle": "offbeat",
+        "scale": "minor",
+        "kickStyle": "punch",
+        "leadStyle": "dubchord",
+        "swing": 0.14
+      },
+      {
+        "name": "PSYTRANCE",
+        "genre": "psytrance",
+        "bpm": 144,
+        "rootSemis": -2,
+        "bassDriveAmt": 3.37,
+        "bassLevel": 1.28,
+        "subLevel": 0.88,
+        "kickDecay": 0.16,
+        "bright": 0.85,
+        "acidLevel": 0.55,
+        "leadDensity": [
+          0.1,
+          0.24
+        ],
+        "choir": 0.0,
+        "_ref": "ASTRIX full-on (analizzato): 144bpm G phrygian, SUB ~45% energia (boom in prima fila), kick dritto, basso rolling 16esimi, acid+didge sopra",
+        "bassStyle": "rolling",
+        "scale": "phrygian",
+        "kickStyle": "punch",
+        "leadStyle": "psy",
+        "swing": 0.0,
+        "didge": true
+      },
+      {
+        "name": "DEVOO",
+        "_ref": "Devoo - Kalashnikov - P4Kid3RM (64k).mp3 (~172 BPM, La min, kick 534ms, hardtek)",
+        "genre": "hardtek",
+        "bpm": 172,
+        "rootSemis": 2,
+        "bassDriveAmt": 3.27,
+        "bassLevel": 1.35,
+        "subLevel": 0.86,
+        "kickDecay": 0.3,
+        "bright": 0.95,
+        "acidLevel": 0.7,
+        "leadDensity": [
+          0.0,
+          0.0
+        ],
+        "choir": 0.0,
+        "bassStyle": "rolling",
+        "scale": "phrygian",
+        "kickStyle": "punch",
+        "leadStyle": "acid",
+        "swing": 0.0
+      },
+      {
+        "name": "MINIMAL TECHNO M",
+        "_ref": "Minimal Techno Mix 2023 - Catch Me If You Can _ Mixed by EJ.mp3 (~129 BPM, La min, kick 534ms, techno)",
+        "genre": "techno",
+        "bpm": 129,
+        "rootSemis": 3,
+        "bassDriveAmt": 3.27,
+        "bassLevel": 1.35,
+        "subLevel": 0.78,
+        "kickDecay": 0.534,
+        "bright": 0.8,
+        "acidLevel": 0.12,
+        "leadDensity": [
+          0.0,
+          0.06
+        ],
+        "choir": 0.0,
+        "bassStyle": "offbeat",
+        "scale": "minor",
+        "kickStyle": "punch",
+        "leadStyle": "dubchord",
+        "swing": 0.16
+      },
+      {
+        "name": "SAJANKA",
+        "_ref": "Sajanka - Tana Num 170BPM - Sajanka (64k).mp3 (~172 BPM, Fa min, kick 534ms, hardtek)",
+        "genre": "psytrance",
+        "bpm": 172,
+        "rootSemis": -4,
+        "bassDriveAmt": 3.27,
+        "bassLevel": 1.33,
+        "subLevel": 0.43,
+        "kickDecay": 0.16,
+        "bright": 1.07,
+        "acidLevel": 0.5,
+        "leadDensity": [
+          0.1,
+          0.24
+        ],
+        "choir": 0.0,
+        "bassStyle": "rolling",
+        "scale": "phrygian",
+        "kickStyle": "punch",
+        "leadStyle": "psy",
+        "swing": 0.0,
+        "didge": true
+      },
+      {
+        "name": "WAKO TEKNO 2011",
+        "_ref": "wako tekno 2011 - shaking mickey - fookskywalker (64k).mp3 (~162 BPM, Fa min, kick 534ms, hardtek)",
+        "genre": "hardtek",
+        "bpm": 168,
+        "rootSemis": 3,
+        "bassDriveAmt": 3.34,
+        "bassLevel": 1.33,
+        "subLevel": 0.84,
+        "kickDecay": 0.3,
+        "bright": 0.92,
+        "acidLevel": 0.62,
+        "leadDensity": [
+          0.0,
+          0.0
+        ],
+        "choir": 0.0,
+        "bassStyle": "rolling",
+        "scale": "minor",
+        "kickStyle": "punch",
+        "leadStyle": "acid",
+        "swing": 0.0
+      }
+    ],
+    "_note": "Generatore Web Audio 24/7 no-copyright con ROTAZIONE di 2 mood ricavati dalle tracce di riferimento via analizza_tracce.py (misura reale BPM/tonalita'/kick/timbro/basso). rootSemis 0 = La (entrambe le tracce, misurato). Rigenera con: python analizza_tracce.py --scrivi-manifest. Non riproduce le tracce: ne imita mood/genere/groove generando pattern sempre nuovi.",
+    "announcer": {
+      "enabled": true,
+      "langs": [
+        "en",
+        "it",
+        "fr",
+        "es"
+      ],
+      "shout": "assets/audio/blackstar.mp3",
+      "buildEveryMin": 10,
+      "cityEveryMin": 120,
+      "duckTo": 0.4,
+      "build": {
+        "kick": "assets/audio/voice_kick.mp3",
+        "clap": "assets/audio/voice_clap.mp3",
+        "bass": "assets/audio/voice_bass.mp3",
+        "hat": "assets/audio/voice_hat.mp3",
+        "lead": "assets/audio/voice_lead.mp3"
+      },
+      "greet": {
+        "morning": "assets/audio/greet_morning.mp3",
+        "afternoon": "assets/audio/greet_afternoon.mp3",
+        "evening": "assets/audio/greet_evening.mp3",
+        "night": "assets/audio/greet_night.mp3"
+      },
+      "cities": [
+        {
+          "name": "milano",
+          "file": "assets/audio/city_milano.mp3",
+          "offset": 1
+        },
+        {
+          "name": "london",
+          "file": "assets/audio/city_london.mp3",
+          "offset": 0
+        },
+        {
+          "name": "berlin",
+          "file": "assets/audio/city_berlin.mp3",
+          "offset": 1
+        },
+        {
+          "name": "paris",
+          "file": "assets/audio/city_paris.mp3",
+          "offset": 1
+        },
+        {
+          "name": "amsterdam",
+          "file": "assets/audio/city_amsterdam.mp3",
+          "offset": 1
+        },
+        {
+          "name": "moscow",
+          "file": "assets/audio/city_moscow.mp3",
+          "offset": 3
+        },
+        {
+          "name": "tokyo",
+          "file": "assets/audio/city_tokyo.mp3",
+          "offset": 9
+        },
+        {
+          "name": "mumbai",
+          "file": "assets/audio/city_mumbai.mp3",
+          "offset": 5
+        },
+        {
+          "name": "sydney",
+          "file": "assets/audio/city_sydney.mp3",
+          "offset": 10
+        },
+        {
+          "name": "newyork",
+          "file": "assets/audio/city_newyork.mp3",
+          "offset": -5
+        },
+        {
+          "name": "losangeles",
+          "file": "assets/audio/city_losangeles.mp3",
+          "offset": -8
+        },
+        {
+          "name": "saopaulo",
+          "file": "assets/audio/city_saopaulo.mp3",
+          "offset": -3
+        }
+      ],
+      "special": {
+        "siren": true,
+        "strings": true
+      }
+    }
+  },
+  "defaults": {
+    "stepsPerBeat": 0.5,
+    "minRate": 0.6,
+    "maxRate": 1.25,
+    "crossfadeMs": 380,
+    "avoidLastN": 6,
+    "bpm": 156,
+    "minDisplayMs": 6500,
+    "_note": "stepsPerBeat=0.5 = un passo ogni 2 battiti (camminata calma, ~1.3-1.4 passi/s), come preferito dall'utente. maxRate 1.25/minRate 0.6 per restare agganciati senza clamp. Pavimenti ~6.5s."
+  }
+}

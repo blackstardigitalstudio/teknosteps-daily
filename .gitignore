@@ -1,0 +1,26 @@
+# SEGRETI — mai committare (arrivano dai GitHub Secrets a runtime)
+client_secret.json
+token.json
+token_*.json
+_deploy_secret.json
+
+# output generati a runtime
+*.mp4
+*.wav
+*.png
+*.jpg
+*.jpeg
+video_output/
+assets/voices/
+assets/audio/
+assets/fonts/
+assets/brand/
+_audio_meta.json
+_desc*.txt
+_ab_thumbs.json
+log_pipeline.txt
+pipeline_assets.tar.gz
+impact.ttf
+orbitron.ttf
+__pycache__/
+*.pyc

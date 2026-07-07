@@ -1,0 +1,84 @@
+name: TeknoSteps Daily
+
+on:
+  schedule:
+    # 05:00 UTC = 07:00 Italia (CEST, estate). GitHub puo' ritardare di qualche minuto.
+    - cron: '0 5 * * *'
+  workflow_dispatch:
+    inputs:
+      shorts:
+        description: 'Short per canale'
+        default: '3'
+      no_upload:
+        description: 'Solo creazione (no upload su YouTube)'
+        type: boolean
+        default: false
+      only:
+        description: 'Solo canali che contengono (es. CH1) - vuoto = tutti'
+        default: ''
+
+concurrency:
+  group: teknosteps-daily
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 330
+    steps:
+      - name: Checkout codice
+        uses: actions/checkout@v4
+
+      - name: Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: ffmpeg
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg
+
+      - name: Dipendenze Python
+        run: pip install -r requirements-cloud.txt
+
+      - name: Scarico gli asset (font, video pavimento, clip Kling, visual)
+        run: |
+          curl -fsSL --retry 6 -o assets.tar.gz https://teknosteps.com/assets/live/pipeline_assets.tar.gz
+          tar xzf assets.tar.gz
+          rm -f assets.tar.gz
+          echo "Asset estratti:"; ls -1 | head -50
+
+      - name: Ripristino credenziali (secret cifrati)
+        env:
+          CS: ${{ secrets.CLIENT_SECRET_B64 }}
+          T1: ${{ secrets.TOKEN_CH1_B64 }}
+          T2: ${{ secrets.TOKEN_CH2_B64 }}
+          T3: ${{ secrets.TOKEN_CH3_B64 }}
+        run: |
+          echo "$CS" | base64 -d > client_secret.json
+          echo "$T1" | base64 -d > token.json
+          echo "$T2" | base64 -d > token_ch2.json
+          echo "$T3" | base64 -d > token_ch3.json
+
+      - name: Pubblicazione giornaliera
+        env:
+          TS_SHORTS: ${{ github.event.inputs.shorts || '3' }}
+          MPLBACKEND: Agg
+        run: |
+          ARGS=""
+          if [ "${{ github.event.inputs.no_upload }}" = "true" ]; then ARGS="$ARGS --no-upload"; fi
+          if [ -n "${{ github.event.inputs.only }}" ]; then ARGS="$ARGS --only ${{ github.event.inputs.only }}"; fi
+          echo "Eseguo: pubblica_giornaliero.py $ARGS  (short/canale=$TS_SHORTS)"
+          python pubblica_giornaliero.py $ARGS
+
+      - name: Log come artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: log_pipeline
+          path: |
+            log_pipeline.txt
+          if-no-files-found: ignore
+          retention-days: 14
