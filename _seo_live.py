@@ -12,10 +12,13 @@ Uso:
   python _seo_live.py            # SOLO report (read-only)
   python _seo_live.py --fix      # applica i metadati SEO
 """
-import argparse, os, sys
+import argparse, os, sys, datetime
 import youtube_upload
 
 BASE = os.path.dirname(os.path.abspath(__file__))
+
+# Anno corrente = ancora di ricerca "24/7 psytrance radio 2026" (dinamico: si aggiorna da solo).
+YEAR = datetime.datetime.now().year
 
 SITE = "https://teknosteps.com"
 CREDIT = "Website by Blackstar Digital - https://www.blackstardigitalstudio.com/"
@@ -26,7 +29,7 @@ DONE_MARK = "\U0001F534"  # bandierina rossa: marca le broadcast gia' sistemate
 LIVE = {
     "token.json": {
         "name": "TeknoSteps",
-        "title": DONE_MARK + " Dark Psytrance Radio • 24/7 Live Mix for Focus, Coding & Night Drive [No Copyright]",
+        "title": DONE_MARK + f" Dark Psytrance Radio {YEAR} • 24/7 Live Mix for Focus, Coding & Night Drive [No Copyright]",
         "desc": (
             "\U0001F534 LIVE 24/7 — Dark Psytrance Radio by TeknoSteps.\n\n"
             "Non-stop hypnotic, driving dark psytrance: endless rolling bass and steps, "
@@ -48,7 +51,7 @@ LIVE = {
     },
     "token_ch2.json": {
         "name": "Strange Light",
-        "title": DONE_MARK + " Strange Light Radio • 24/7 Hypnotic Dark Psytrance Visuals for Focus & Trip [No Copyright]",
+        "title": DONE_MARK + f" Strange Light Radio {YEAR} • 24/7 Hypnotic Dark Psytrance Visuals for Focus & Trip [No Copyright]",
         "desc": (
             "\U0001F534 LIVE 24/7 — Strange Light Radio: hypnotic dark psytrance with "
             "mesmerizing visuals.\n\n"
@@ -70,7 +73,7 @@ LIVE = {
     },
     "token_ch3.json": {
         "name": "Tekno Monkey",
-        "title": DONE_MARK + " Tekno Monkey Radio • 24/7 Dark Psytrance Beats to Dance, Focus & Code [No Copyright]",
+        "title": DONE_MARK + f" Tekno Monkey Radio {YEAR} • 24/7 Dark Psytrance Beats to Dance, Focus & Code [No Copyright]",
         "desc": (
             "\U0001F534 LIVE 24/7 — Tekno Monkey Radio: dark psytrance beats with a dancing monkey.\n\n"
             "Non-stop on-beat dark psytrance and tribal tekno — fun, driving and hypnotic. "
