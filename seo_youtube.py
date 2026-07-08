@@ -10,10 +10,14 @@ Costruisce TITOLO + DESCRIZIONE + TAG ottimizzati per la ricerca YouTube:
 
 Le pipeline chiamano:  title, desc, tags = seo_youtube.build("strange")
 """
-import json, os, random
+import json, os, random, datetime
 
 BASE = os.path.dirname(os.path.abspath(__file__))
 META = os.path.join(BASE, "_audio_meta.json")
+
+# Anno corrente come ancora di ricerca ("dark psytrance 2026", "psytrance mix 2026").
+# Dinamico: mostra 2026 ora e passa a 2027 da solo a gennaio, non invecchia mai.
+YEAR = datetime.datetime.now().year
 
 LINKS = ("📻 24/7 Radio: https://teknosteps.com\n"
          "▶️ TeknoSteps: https://youtube.com/@teknosteps\n"
@@ -102,15 +106,16 @@ def build(channel):
     bpm_s = f"{bpm} BPM" if bpm else ""
     use = random.choice(USE_CASES)
 
-    # ---- TITLE: keyword in testa + BPM + durata + use-case + [No Copyright] + brand
+    # ---- TITLE: keyword+ANNO in testa + BPM + durata + use-case + [No Copyright] + brand
+    # L'anno subito dopo la keyword = ancora di ricerca "dark psytrance 2026".
     if bpm_s:
-        title = f"{c['genre']} {bpm_s} · 1 Hour Mix for {use} [No Copyright] | {c['brand']}"
+        title = f"{c['genre']} {YEAR} · {bpm_s} · 1 Hour Mix for {use} [No Copyright] | {c['brand']}"
     else:
-        title = f"{c['genre']} · 1 Hour Mix for {use} [No Copyright] | {c['brand']}"
+        title = f"{c['genre']} {YEAR} · 1 Hour Mix for {use} [No Copyright] | {c['brand']}"
     title = title[:100]
 
-    # ---- DESCRIPTION: hook keyword (prime righe) -> capitoli -> blurb -> link -> hashtag
-    hook = f"{c['genre']}" + (f" • {bpm_s}" if bpm_s else "") + \
+    # ---- DESCRIPTION: hook keyword+anno (prime righe) -> capitoli -> blurb -> link -> hashtag
+    hook = f"{c['genre']} {YEAR}" + (f" • {bpm_s}" if bpm_s else "") + \
            f" • 1 hour of no-copyright psy for {use.lower()}."
     ch_txt = chapters(meta.get("blocks", []))
     parts = [hook, "", c["blurb"]]
@@ -122,6 +127,8 @@ def build(channel):
     desc = "\n".join(parts)
 
     tags = c["tags"]
+    # l'anno come keyword di ricerca (vale sia per i mix sia per gli Short che ereditano questi tag)
+    tags += f", {c['genre'].lower()} {YEAR}, psytrance {YEAR}, psytrance mix {YEAR}, best psytrance {YEAR}"
     if bpm:                                   # il BPM come keyword nei tag (numero tondo cercato)
         tags += f", {bpm} bpm, {bpm} bpm psytrance, {bpm} bpm mix"
     return title, desc, tags
