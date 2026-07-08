@@ -7,8 +7,8 @@ on:
   workflow_dispatch:
     inputs:
       shorts:
-        description: 'Short per canale (1 = quota-safe con 1 solo progetto Google)'
-        default: '1'
+        description: 'Short per canale (ora 5: ogni canale ha il suo progetto Google)'
+        default: '5'
       no_upload:
         description: 'Solo creazione (no upload su YouTube)'
         type: boolean
@@ -73,7 +73,7 @@ jobs:
 
       - name: Pubblicazione giornaliera
         env:
-          TS_SHORTS: ${{ github.event.inputs.shorts || '1' }}
+          TS_SHORTS: ${{ github.event.inputs.shorts || '5' }}
           MPLBACKEND: Agg
         run: |
           ARGS=""
