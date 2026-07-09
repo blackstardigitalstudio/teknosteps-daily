@@ -11,7 +11,7 @@ Preset per canale:
   python crea_short.py --preset feet   --input teknosteps_psy_1h.mp4 --auto 3
   python crea_short.py --preset hypno  --input teknosteps_ipno_1h.mp4 --auto 3
 """
-import argparse, os, shutil, subprocess, sys
+import argparse, os, shutil, subprocess, sys, json
 
 BASE = os.path.dirname(os.path.abspath(__file__))
 
@@ -20,6 +20,22 @@ PRESETS = {
     "monkey": dict(l1="THIS MONKEY", l2="IS ON BEAT", bottom="TEKNO MONKEY   -   #Shorts"),
     "feet":   dict(l1="CAN YOU WALK", l2="TO THIS BASS", bottom="DARK PSYTRANCE   -   #Shorts"),
     "hypno":  dict(l1="DON'T SCROLL", l2="JUST WATCH", bottom="HYPNOTIC PSY   -   #Shorts"),
+}
+
+# POOL di hook-testo a ROTAZIONE nel PRIMO FRAME dello short (scroll-stopper).
+# Solo per preset dove il visual e' astratto e la caption e' il vero gancio (CH2 hypno):
+# ogni short del batch prende una coppia diversa -> niente caption identiche (stesso
+# problema dei titoli duplicati) + e' l'A/B "copertina spostata sugli Short".
+# Il primo elemento e' la caption storica (baseline, nessuna regressione).
+HOOK_POOLS = {
+    "hypno": [
+        ("DON'T SCROLL", "JUST WATCH"),
+        ("WAIT FOR", "THE DROP"),
+        ("CAN YOU LOOK", "AWAY?"),
+        ("THIS LOOP IS", "HYPNOTIC"),
+        ("KEEP WATCHING", "TRUST ME"),
+        ("IT TAKES OVER", "YOUR SCREEN"),
+    ],
 }
 
 
@@ -48,8 +64,10 @@ def esc(t):
     return t.replace(":", "\\:").replace("'", "’")
 
 
-def cut(ff, src, start, dur, out, pre, font):
-    l1, l2, bottom = pre["l1"], pre["l2"], pre["bottom"]
+def cut(ff, src, start, dur, out, pre, font, hook=None):
+    # hook = (l1, l2) opzionale che sovrascrive la caption del preset (rotazione pool).
+    l1, l2 = (hook if hook else (pre["l1"], pre["l2"]))
+    bottom = pre["bottom"]
     fc = (
         "[0:v]split=2[bg][fg];"
         "[bg]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,"
@@ -87,14 +105,25 @@ def main():
         sys.exit(f"[X] Input non trovato: {args.input}")
     ff = ffmpeg(); font = ensure_font(); pre = PRESETS[args.preset]
 
+    pool = HOOK_POOLS.get(args.preset)  # None se il preset non usa la rotazione
+
     if args.auto > 0:
         spots = [6 + int(i * 48 / max(1, args.auto)) for i in range(args.auto)]
+        hook_log = {}
         for i, m in enumerate(spots, 1):
             out = os.path.join(BASE, f"short_{args.preset}_{i:02d}.mp4")
-            cut(ff, args.input, f"00:{m:02d}:00", args.dur, out, pre, font)
+            hook = pool[(i - 1) % len(pool)] if pool else None
+            cut(ff, args.input, f"00:{m:02d}:00", args.dur, out, pre, font, hook)
+            if hook:
+                hook_log[os.path.basename(out)] = {"l1": hook[0], "l2": hook[1], "start": f"00:{m:02d}:00"}
+        if hook_log:
+            # traccia caption->short per l'A/B (correlazione con le view via titolo/upload)
+            with open(os.path.join(BASE, "_short_hooks_log.json"), "w", encoding="utf-8") as f:
+                json.dump(hook_log, f, ensure_ascii=False, indent=1)
     else:
         out = args.out or os.path.join(BASE, f"short_{args.preset}.mp4")
-        cut(ff, args.input, args.start, args.dur, out, pre, font)
+        hook = pool[0] if pool else None
+        cut(ff, args.input, args.start, args.dur, out, pre, font, hook)
 
 
 if __name__ == "__main__":
