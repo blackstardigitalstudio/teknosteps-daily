@@ -1,13 +1,18 @@
 name: TeknoSteps Daily
 
+# AFFIDABILITA': GitHub a volte ritarda/salta i job a orario. Quindi proviamo a
+# PIU' orari al mattino; un "gate" fa in modo che si pubblichi UNA sola volta al
+# giorno (se un run di oggi e' gia' riuscito o e' in corso, gli altri saltano).
 on:
   schedule:
-    # 05:00 UTC = 07:00 Italia (CEST, estate). GitHub puo' ritardare di qualche minuto.
-    - cron: '0 5 * * *'
+    - cron: '0 5 * * *'    # 07:00 Italia (estate)
+    - cron: '0 6 * * *'    # 08:00 Italia
+    - cron: '0 7 * * *'    # 09:00 Italia
+    - cron: '0 9 * * *'    # 11:00 Italia (ultima rete di sicurezza)
   workflow_dispatch:
     inputs:
       shorts:
-        description: 'Short per canale (ora 5: ogni canale ha il suo progetto Google)'
+        description: 'Short per canale'
         default: '5'
       no_upload:
         description: 'Solo creazione (no upload su YouTube)'
@@ -16,13 +21,50 @@ on:
       only:
         description: 'Solo canali che contengono (es. CH1) - vuoto = tutti'
         default: ''
+      force:
+        description: 'Forza la pubblicazione anche se oggi e già uscita'
+        type: boolean
+        default: false
 
 concurrency:
   group: teknosteps-daily
   cancel-in-progress: false
 
+permissions:
+  actions: read
+  contents: read
+
 jobs:
+  # Decide se pubblicare: il manuale pubblica sempre; a orario pubblica solo se
+  # oggi (UTC) non c'e' gia' un run riuscito o in corso. Cosi' i 4 cron non fanno doppioni.
+  gate:
+    runs-on: ubuntu-latest
+    outputs:
+      run: ${{ steps.decide.outputs.run }}
+    steps:
+      - name: Decidi
+        id: decide
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if [ "${{ github.event_name }}" != "schedule" ] || [ "${{ github.event.inputs.force }}" = "true" ]; then
+            echo "run=true" >> "$GITHUB_OUTPUT"; echo "Avvio manuale/forzato: pubblico."; exit 0
+          fi
+          TODAY=$(date -u +%F)
+          N=$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/daily.yml/runs?per_page=40" \
+                --jq "[.workflow_runs[]
+                        | select(.id != ${{ github.run_id }})
+                        | select(.created_at >= \"${TODAY}T00:00:00Z\")
+                        | select(.conclusion==\"success\" or .status==\"in_progress\" or .status==\"queued\")] | length")
+          if [ "${N:-0}" -gt 0 ]; then
+            echo "run=false" >> "$GITHUB_OUTPUT"; echo "Oggi c'e' gia' un run ($N): salto per non fare doppioni."
+          else
+            echo "run=true" >> "$GITHUB_OUTPUT"; echo "Nessun run riuscito oggi: pubblico."
+          fi
+
   publish:
+    needs: gate
+    if: needs.gate.outputs.run == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 330
     steps:
