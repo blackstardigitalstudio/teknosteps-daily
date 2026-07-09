@@ -74,7 +74,7 @@ def main():
     SHORT_HOOKS = [
         "Can you walk to this bass? Dark Psytrance",
         "How long can you walk to this dark psytrance?",
-        "This dark psytrance drop should be illegal",
+        "Bet you can't walk to this dark psytrance",
         "POV: dark psytrance takes over your focus",
         "Feel this dark psytrance drop",
         "Dark Psytrance that hits different at night",
