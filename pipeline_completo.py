@@ -76,7 +76,7 @@ def main():
         "How long can you walk to this dark psytrance?",
         "Bet you can't walk to this dark psytrance",
         "POV: dark psytrance takes over your focus",
-        "Feel this dark psytrance drop",
+        "Wait for the drop in this dark psytrance",
         "Dark Psytrance that hits different at night",
     ]
     short_titles = random.sample(SHORT_HOOKS, min(args.shorts, len(SHORT_HOOKS)))
