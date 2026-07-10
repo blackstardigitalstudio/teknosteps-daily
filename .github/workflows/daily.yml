@@ -131,5 +131,6 @@ jobs:
           name: log_pipeline
           path: |
             log_pipeline.txt
+            _short_hooks_log.json
           if-no-files-found: ignore
           retention-days: 14
