@@ -78,6 +78,9 @@ def main():
         "POV: dark psytrance takes over your focus",
         "Wait for the drop in this dark psytrance",
         "Dark Psytrance that hits different at night",
+        "Try not to move to this dark psytrance",
+        "This dark psytrance hits harder at 3am",
+        "Your brain on dark psytrance",
     ]
     short_titles = random.sample(SHORT_HOOKS, min(args.shorts, len(SHORT_HOOKS)))
     while len(short_titles) < args.shorts:
