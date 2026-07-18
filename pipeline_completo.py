@@ -94,12 +94,28 @@ def main():
                     "--description-file", desc_file, "--tags", tags,
                     "--thumbnail", "teknosteps-thumbnail.png", "--privacy", args.privacy],
                    cwd=BASE, check=True)
+    # SEO Shorts: fino a ieri gli Short partivano SENZA descrizione (zero testo
+    # indicizzabile, nessun link al funnel license/sito, nessun hashtag). Gli Short
+    # sono il vettore di traffico n.1 del canale -> gli diamo una descrizione breve
+    # keyword-rich. Prima riga = hook del singolo Short (ogni desc leggermente diversa,
+    # evita i near-duplicati) + link sito/license (funnel) + hashtag. Solo descrizione.
+    short_desc_file = os.path.join(BASE, "_desc_short_tmp.txt")
     for i in range(1, args.shorts + 1):
         sp = os.path.join(BASE, f"short_feet_{i:02d}.mp4")
         if os.path.exists(sp):
             short_title = f"{short_titles[i-1]} #shorts | TeknoSteps"
+            short_desc = (
+                f"{short_titles[i-1]} 🎧\n\n"
+                "Dark psytrance by TeknoSteps — hypnotic, driving, 100% no-copyright, "
+                "free to use in your videos and streams.\n\n"
+                "📻 24/7 Radio & free downloads: https://teknosteps.com\n"
+                "🎬 License / royalty-free: https://teknosteps.com/license.html\n\n"
+                "#shorts #darkpsytrance #psytrance #nocopyrightmusic #psy"
+            )
+            with open(short_desc_file, "w", encoding="utf-8") as f:
+                f.write(short_desc)
             subprocess.run([PY, "youtube_upload.py", "--video", sp, "--short",
-                            "--title", short_title,
+                            "--title", short_title, "--description-file", short_desc_file,
                             "--tags", tags, "--privacy", args.privacy], cwd=BASE, check=True)
 
     print("\n[OK] EPISODIO COMPLETO PUBBLICATO. Made in Italy.")
