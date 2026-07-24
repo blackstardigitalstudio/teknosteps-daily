@@ -30,11 +30,15 @@ NEED_FREE_GB = 3.0       # RAM libera minima per partire
 WAIT_RAM_MAX = 900       # attesa max per la RAM (15 min)
 CH_TIMEOUT = 5400        # timeout per canale (90 min): CH2 con audio lungo + upload puo' durare
 
-# Short per canale: da env TS_SHORTS (default 5). In cloud lo mettiamo a 1 per
-# stare nella quota API di un solo progetto Google (~6 upload/giorno totali).
+# Short per canale: da env TS_SHORTS (default 5). Ogni canale ha il suo progetto
+# Google (~6 upload/giorno ciascuno = 1 video + 5 short).
+# CH1 puo' averne uno suo (TS_SHORTS_CH1): lo teniamo a 4 nel cloud per lasciare
+# uno slot di quota alla pubblicazione giornaliera di una CANZONE (pubblica_release.py),
+# che esce sullo stesso canale/progetto TeknoSteps.
 _S = (os.environ.get("TS_SHORTS", "") or "5").strip()
+_S1 = (os.environ.get("TS_SHORTS_CH1", "") or _S).strip()
 CHANNELS = [
-    ("CH1 TeknoSteps",   ["pipeline_completo.py", "--shorts", _S]),
+    ("CH1 TeknoSteps",   ["pipeline_completo.py", "--shorts", _S1]),
     ("CH2 Strange Light", ["pipeline_ipnotico.py", "--shorts", _S]),
     ("CH3 Tekno Monkey",  ["pipeline_scimmia.py", "--shorts", _S]),
 ]
