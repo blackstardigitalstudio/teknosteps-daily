@@ -50,16 +50,27 @@ jobs:
           if [ "${{ github.event_name }}" != "schedule" ] || [ "${{ github.event.inputs.force }}" = "true" ]; then
             echo "run=true" >> "$GITHUB_OUTPUT"; echo "Avvio manuale/forzato: pubblico."; exit 0
           fi
+          # Conta SOLO chi ha davvero pubblicato (job "publish" eseguito), non i run
+          # che hanno solo saltato. Altrimenti due run ravvicinati si bloccano a
+          # vicenda (uno vede l'altro "in coda" e salta, l'altro vede il primo
+          # "riuscito" e salta) e in quel giorno non esce niente (successo il 22/07).
           TODAY=$(date -u +%F)
-          N=$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/daily.yml/runs?per_page=40" \
-                --jq "[.workflow_runs[]
-                        | select(.id != ${{ github.run_id }})
-                        | select(.created_at >= \"${TODAY}T00:00:00Z\")
-                        | select(.conclusion==\"success\" or .status==\"in_progress\" or .status==\"queued\")] | length")
-          if [ "${N:-0}" -gt 0 ]; then
-            echo "run=false" >> "$GITHUB_OUTPUT"; echo "Oggi c'e' gia' un run ($N): salto per non fare doppioni."
+          IDS=$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/daily.yml/runs?per_page=40" \
+                  --jq "[.workflow_runs[]
+                          | select(.id != ${{ github.run_id }})
+                          | select(.created_at >= \"${TODAY}T00:00:00Z\")
+                          | .id] | .[]")
+          DONE=0
+          for id in $IDS; do
+            ST=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$id/jobs" \
+                   --jq '[.jobs[] | select(.name=="publish") | (.conclusion // .status)] | .[0] // "none"' 2>/dev/null || echo none)
+            echo "  run $id -> publish=$ST"
+            case "$ST" in success|in_progress|queued) DONE=1; break ;; esac
+          done
+          if [ "$DONE" = "1" ]; then
+            echo "run=false" >> "$GITHUB_OUTPUT"; echo "Oggi qualcuno ha gia' pubblicato: salto (niente doppioni)."
           else
-            echo "run=true" >> "$GITHUB_OUTPUT"; echo "Nessun run riuscito oggi: pubblico."
+            echo "run=true" >> "$GITHUB_OUTPUT"; echo "Oggi nessuno ha pubblicato: pubblico io."
           fi
 
   publish:
