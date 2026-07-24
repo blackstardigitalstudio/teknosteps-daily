@@ -32,7 +32,7 @@ concurrency:
 
 permissions:
   actions: read
-  contents: read
+  contents: write   # per ricommittare release/_published.json (canzoni gia' uscite)
 
 jobs:
   # Decide se pubblicare: il manuale pubblica sempre; a orario pubblica solo se
@@ -127,13 +127,52 @@ jobs:
       - name: Pubblicazione giornaliera
         env:
           TS_SHORTS: ${{ github.event.inputs.shorts || '5' }}
+          # CH1 a 4 short: lascia uno slot di quota alla CANZONE del giorno
+          # (stesso canale/progetto TeknoSteps). CH2/CH3 restano a 5.
+          TS_SHORTS_CH1: '4'
           MPLBACKEND: Agg
         run: |
           ARGS=""
           if [ "${{ github.event.inputs.no_upload }}" = "true" ]; then ARGS="$ARGS --no-upload"; fi
           if [ -n "${{ github.event.inputs.only }}" ]; then ARGS="$ARGS --only ${{ github.event.inputs.only }}"; fi
-          echo "Eseguo: pubblica_giornaliero.py $ARGS  (short/canale=$TS_SHORTS)"
+          echo "Eseguo: pubblica_giornaliero.py $ARGS  (short CH2/CH3=$TS_SHORTS, CH1=$TS_SHORTS_CH1)"
           python pubblica_giornaliero.py $ARGS
+
+      # --- CANZONE DEL GIORNO (singoli Mureka, uno al giorno, in ordine a cascata) ---
+      - name: Scarico i brani (mp3 + copertine)
+        if: github.event.inputs.no_upload != 'true'
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release download release-assets-v1 --repo "$GITHUB_REPOSITORY" -p release_assets.tar.gz
+          # NON sovrascrivere lo stato del repo (release/_published.json = canzoni gia' uscite)
+          tar xzf release_assets.tar.gz --exclude='release/_published.json'
+          rm -f release_assets.tar.gz
+          echo "Gia' pubblicate finora:"; cat release/_published.json | head -5
+
+      - name: Canzone del giorno
+        if: github.event.inputs.no_upload != 'true'
+        continue-on-error: true   # se fallisce (quota/altro) il giro dei canali resta valido
+        env:
+          MPLBACKEND: Agg
+        run: |
+          python pubblica_release.py --max 1 --privacy public
+
+      - name: Salvo quali canzoni sono uscite
+        if: always()
+        continue-on-error: true
+        run: |
+          if git diff --quiet -- release/_published.json 2>/dev/null; then
+            echo "Nessuna canzone nuova: niente da salvare."
+          else
+            git config user.name "TeknoSteps Bot"
+            git config user.email "blackstardigitals@gmail.com"
+            git add release/_published.json
+            git commit -m "canzone pubblicata: aggiorno il registro [skip ci]"
+            git push
+            echo "Registro canzoni aggiornato."
+          fi
 
       - name: Log come artifact
         if: always()
